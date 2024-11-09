@@ -579,6 +579,7 @@ input[type="text"], textarea {
             cursor: pointer;
             font-size: 14px;
         }
+  
     </style>
 </head>
 <body>
@@ -598,19 +599,33 @@ input[type="text"], textarea {
     <div class="content">
         <!-- การ์ดยอดเงินและสถิติ -->
         <div class="card">
-            <h1>999,999</h1>
+            <h1>0</h1>
             <p>จำนวนผู้เข้าชมวันนี้</p>
         </div>
         <div class="card">
-            <h1>฿999.999</h1>
+            <h1>฿0</h1>
             <p>รายได้ทั้งหมด</p>
         </div>
         <div class="card">
-    <h1>฿8,376,000</h1>
+    <h1>฿0</h1>
     <p>ยอดเงินในกระเป๋า</p>
 </div>
     
-      
+      <script>
+      document.addEventListener('DOMContentLoaded', () => {
+    // ใช้การเลือกองค์ประกอบที่ชัดเจนเพื่อเลือกการ์ดยอดเงินในกระเป๋า
+    const cards = document.querySelectorAll('.card');
+    const walletCard = Array.from(cards).find(card => card.querySelector('p').textContent === 'ยอดเงินในกระเป๋า');
+    
+    if (walletCard) {
+        const walletBalanceElement = walletCard.querySelector('h1');
+        
+        // ดึงยอดเงินจาก localStorage และแสดงผล
+        let walletBalance = parseFloat(localStorage.getItem('balance')) || 0;
+        walletBalanceElement.textContent = `฿${walletBalance.toLocaleString()}`;
+    }
+});
+      </script>
     
 
 <!-- ปุ่มกดเพื่อเปิด Modal -->
@@ -620,7 +635,7 @@ input[type="text"], textarea {
     </button>
     <p class="withdraw-text">ส่งคำขอถอน</p>
 </div>
-
+  
 <!-- ส่วน Modal -->
 <div id="withdrawModal" class="modal">
     <div class="modal-content">
@@ -633,10 +648,20 @@ input[type="text"], textarea {
             <label for="message">ข้อความ</label>
             <textarea id="message" placeholder="ข้อความ"></textarea>
             
-            <button type="submit" class="submit-button">ส่ง</button>
+             <button type="button" class="submit-button" onclick="withdrawAmount()">ส่ง</button>
         </form>
     </div>
 </div>
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const walletBalanceElement = document.querySelector('.card h1'); // ระบุให้ชี้ไปยังยอดเงินในกระเป๋า
+
+    // ดึงยอดเงินจาก localStorage และแสดงผล
+    let walletBalance = parseFloat(localStorage.getItem('balance')) || 0;
+    walletBalanceElement.textContent = `฿${walletBalance.toLocaleString()}`;
+});
+   </script>
 
 <!-- สไตล์ CSS -->
 <style>
@@ -699,10 +724,10 @@ window.onclick = function(event) {
 <div class="order-list">
     <h3>คำสั่งซื้อ</h3>
     <ul>
-        <li><span>คำสั่งซื้อทั้งหมด:</span> <span>1,254</span></li>
-        <li><span>คำสั่งซื้อที่รอดำเนินการ:</span> <span>197</span></li>
-        <li><span>คำสั่งซื้อที่ถูกยกเลิก:</span> <span>12</span></li>
-        <li><span>คำสั่งซื้อที่ประสบความสำเร็จ:</span> <span>1,242</span></li>
+        <li><span>คำสั่งซื้อทั้งหมด:</span> <span>0</span></li>
+        <li><span>คำสั่งซื้อที่รอดำเนินการ:</span> <span>0</span></li>
+        <li><span>คำสั่งซื้อที่ถูกยกเลิก:</span> <span>0</span></li>
+        <li><span>คำสั่งซื้อที่ประสบความสำเร็จ:</span> <span>0</span></li>
     </ul>
 </div>
   
