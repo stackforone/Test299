@@ -606,7 +606,7 @@ input[type="text"], textarea {
             <p>รายได้ทั้งหมด</p>
         </div>
         <div class="card">
-    <h1>฿999,999</h1>
+    <h1>฿8,376,000</h1>
     <p>ยอดเงินในกระเป๋า</p>
 </div>
     
@@ -699,10 +699,10 @@ window.onclick = function(event) {
 <div class="order-list">
     <h3>คำสั่งซื้อ</h3>
     <ul>
-        <li><span>คำสั่งซื้อทั้งหมด:</span> <span>0</span></li>
-        <li><span>คำสั่งซื้อที่รอดำเนินการ:</span> <span>0</span></li>
-        <li><span>คำสั่งซื้อที่ถูกยกเลิก:</span> <span>0</span></li>
-        <li><span>คำสั่งซื้อที่ประสบความสำเร็จ:</span> <span>0</span></li>
+        <li><span>คำสั่งซื้อทั้งหมด:</span> <span>1,254</span></li>
+        <li><span>คำสั่งซื้อที่รอดำเนินการ:</span> <span>197</span></li>
+        <li><span>คำสั่งซื้อที่ถูกยกเลิก:</span> <span>12</span></li>
+        <li><span>คำสั่งซื้อที่ประสบความสำเร็จ:</span> <span>1,242</span></li>
     </ul>
 </div>
   
@@ -859,6 +859,40 @@ window.onclick = function(event) {
             <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
         </div>
     </div>
+
+     <script>
+        // ฟังก์ชันแสดงข้อมูลจาก Local Storage
+        document.getElementById('fullname').textContent = localStorage.getItem('fullname') || 'Test';
+        document.getElementById('phone').textContent = localStorage.getItem('phone') || '000';
+        document.getElementById('usercode').textContent = "รหัสสำหรับ: " + (localStorage.getItem('usercode') || Math.random().toString(36).substring(2, 10));
+        document.getElementById('userid').textContent = "ID: " + (localStorage.getItem('userid') || Math.floor(Math.random() * 100000));
+
+        // บันทึกข้อมูลสุ่มเข้า Local Storage ถ้ายังไม่มี
+        if (!localStorage.getItem('usercode')) {
+            localStorage.setItem('usercode', document.getElementById('usercode').textContent.split(": ")[1]);
+        }
+
+        if (!localStorage.getItem('userid')) {
+            localStorage.setItem('userid', document.getElementById('userid').textContent.split(": ")[1]);
+        }
+
+        // ฟังก์ชันเปิด/ปิดเมนูย่อย
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const isActive = this.classList.contains('active');
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                document.querySelectorAll('.submenu').forEach(sub => sub.style.display = 'none');
+
+                if (!isActive) {
+                    this.classList.add('active');
+                    const nextElement = this.nextElementSibling;
+                    if (nextElement && nextElement.classList.contains('submenu')) {
+                        nextElement.style.display = 'block';
+                    }
+                }
+            });
+        });
+    </script>
   
       <script>
     document.getElementById('menuButton').addEventListener('click', function(event) {
