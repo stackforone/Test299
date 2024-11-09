@@ -183,7 +183,7 @@
     <div class="content">
         <div class="balance-container">
             <div class="icon">?</div>
-            <h2 id="balance">฿890,009</h2>
+            <h2 id="balance">฿0</h2>
             <p>ยอดเงินในกระเป๋า</p>
         </div>
 
@@ -218,16 +218,7 @@
                     <th>จำนวน</th>
                     <th>การอนุมัติ</th>
                 </tr>
-                <tr>
-                    <td><span class="icon">+</span> 1</td>
-                    <td>฿500.00</td>
-                    <td><span class="status-button">รอดำเนินการ</span></td>
-                </tr>
-                <tr>
-                    <td><span class="icon">+</span> 2</td>
-                    <td>฿500.00</td>
-                    <td><span class="status-button">รอดำเนินการ</span></td>
-                </tr>
+                
             </table>
         </div>
     </div>
@@ -259,38 +250,64 @@
             document.getElementById('topUpModal').style.display = 'none';
         }
         
-        function submitTopUp() {
-            const amount = parseFloat(document.getElementById('topUpAmount').value);
-            if (isNaN(amount) || amount <= 0) {
-                alert("กรุณากรอกจำนวนเงินที่ถูกต้อง");
-                return;
-            }
-            
-            // อัพเดตยอดเงิน
-            const balanceElement = document.getElementById('balance');
-            const currentBalance = parseFloat(balanceElement.textContent.replace(/฿|,/g, ''));
-            const newBalance = currentBalance + amount;
-            balanceElement.textContent = `฿${newBalance.toLocaleString()}`;
-            
-            // เพิ่มรายการใหม่ในตารางประวัติ
-            const historyTable = document.getElementById('historyTable');
-            const newRow = historyTable.insertRow();
-            newRow.innerHTML = `
-                <td><span class="icon">+</span> ${historyTable.rows.length - 1}</td>
-                <td>฿${amount.toFixed(2)}</td>
-                <td><span class="status-button">รอดำเนินการ</span></td>
-            `;
-            
-            // แสดงแถบยืนยันการเติมเงิน
-            document.getElementById('confirmationBanner').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('confirmationBanner').style.display = 'none';
-            }, 3000);
-            
-            // ปิดโมดอลและรีเซ็ตช่องกรอกจำนวนเงิน
-            closeModal();
-            document.getElementById('topUpAmount').value = '';
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+    const balanceElement = document.getElementById('balance');
+    const historyTable = document.getElementById('historyTable');
+
+    // โหลดยอดเงินจาก localStorage ถ้ามีอยู่
+    let currentBalance = parseFloat(localStorage.getItem('balance')) || 0;
+    balanceElement.textContent = `฿${currentBalance.toLocaleString()}`;
+
+    // โหลดประวัติการทำรายการจาก localStorage ถ้ามีอยู่
+    const history = JSON.parse(localStorage.getItem('history')) || [];
+    history.forEach((entry, index) => {
+        const newRow = historyTable.insertRow();
+        newRow.innerHTML = `
+            <td><span class="icon">+</span> ${index + 1}</td>
+            <td>฿${entry.amount.toFixed(2)}</td>
+            <td><span class="status-button">รอดำเนินการ</span></td>
+        `;
+    });
+});
+
+function submitTopUp() {
+    const amount = parseFloat(document.getElementById('topUpAmount').value);
+    if (isNaN(amount) || amount <= 0) {
+        alert("กรุณากรอกจำนวนเงินที่ถูกต้อง");
+        return;
+    }
+
+    const balanceElement = document.getElementById('balance');
+    let currentBalance = parseFloat(balanceElement.textContent.replace(/฿|,/g, ''));
+    const newBalance = currentBalance + amount;
+    balanceElement.textContent = `฿${newBalance.toLocaleString()}`;
+
+    // บันทึกยอดเงินใน localStorage
+    localStorage.setItem('balance', newBalance);
+
+    // เพิ่มรายการใหม่ในตารางประวัติและบันทึกลงใน localStorage
+    const historyTable = document.getElementById('historyTable');
+    const newRow = historyTable.insertRow();
+    newRow.innerHTML = `
+        <td><span class="icon">+</span> ${historyTable.rows.length - 1}</td>
+        <td>฿${amount.toFixed(2)}</td>
+        <td><span class="status-button">รอดำเนินการ</span></td>
+    `;
+
+    const history = JSON.parse(localStorage.getItem('history')) || [];
+    history.push({ amount: amount });
+    localStorage.setItem('history', JSON.stringify(history));
+
+    // แสดงแถบยืนยันการเติมเงิน
+    document.getElementById('confirmationBanner').style.display = 'block';
+    setTimeout(() => {
+        document.getElementById('confirmationBanner').style.display = 'none';
+    }, 3000);
+
+    // ปิดโมดอลและรีเซ็ตช่องกรอกจำนวนเงิน
+    closeModal();
+    document.getElementById('topUpAmount').value = '';
+}
     </script>
 </body>
 </html>
